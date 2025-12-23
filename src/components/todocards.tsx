@@ -12,7 +12,7 @@ const TodoCard: React.FC<TodoCardProps>= ({task,onRemove}) => {
   return (
     <View style={styles.card}>
       {/* Checkbox */}
-       <View style={{flex:1, flexDirection:"row", padding:4}}>
+     <View style={styles.content}>
          <TouchableOpacity
         style={[styles.checkbox, checked && styles.checked]}
         onPress={() => setChecked(prev => !prev)}
@@ -26,11 +26,11 @@ const TodoCard: React.FC<TodoCardProps>= ({task,onRemove}) => {
       </Text>
        </View>
 
-       <TouchableOpacity
-         onPress={onRemove}
-        >
-         {checked &&<Ionicons name="trash" size={22} color={COLORS.accent} />}
-      </TouchableOpacity>
+ {checked && (
+    <TouchableOpacity  onPress={onRemove}>
+      <Ionicons name="trash" size={22} color={COLORS.accent} />
+    </TouchableOpacity>
+  )}
     </View>
   );
 };
@@ -40,12 +40,18 @@ export default TodoCard;
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    alignItems: 'center',
+      alignItems: "flex-start",
     backgroundColor: COLORS.white,
     padding: 12,
     borderRadius: 8,
     marginVertical: 5,
     elevation: 2,
+    
+  },
+  content: {
+    flex: 1,                 // take remaining width
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
   checkbox: {
     width: 24,
@@ -66,9 +72,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   text: {
+    flex:1,
+    paddingHorizontal:5,
     marginLeft: 12,
     fontSize: 16,
     color: COLORS.primary,
+    textAlign:"justify",
+  
   },
   textChecked: {
     textDecorationLine: 'line-through',

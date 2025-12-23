@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../constants/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,11 +13,18 @@ const TodoListScreen = () => {
 };
   const [modalVisible, setModalVisible] = useState(false);
 const [todos, setTodos] = useState<Todo[]>([]);
-  const removeTodo =(index:number)=>{
-    let newTodos =[...todos]
-    newTodos.splice(index ,1);
-    setTodos(newTodos);
-  };
+const [time, setTime] = useState(new Date());
+useEffect(()=>{
+  let interval =setInterval(()=>{
+    setTime(new Date());
+  },1000)
+    return () => clearInterval(interval);
+},[])
+  // const removeTodo =(index:number)=>{
+  //   let newTodos =[...todos]
+  //   newTodos.splice(index ,1);
+  //   setTodos(newTodos);
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}  >
@@ -36,19 +43,31 @@ const [todos, setTodos] = useState<Todo[]>([]);
         </View>
       </View>
       <View style={{margin:10, paddingVertical:20}}>
-      <Text style={{textAlign:"center",fontSize:22, fontWeight:800, color:COLORS.white, }}>{new Date().toLocaleTimeString()}</Text>
-      </View>
+      <Text style={{textAlign:"center",fontSize:22, fontWeight:800, color:COLORS.white, }}> {time.toLocaleTimeString()}</Text>
+      </View> 
 
       <View style={styles.todocontainer}>
-       {todos.map((todo)=>(
-        <TodoCard 
-        key={todo.id}
-        task ={todo.text}
-        onRemove={() =>
-      setTodos(prev => prev.filter(t => t.id!== todo.id))
-    }
-        />
-       ))}
+     {todos.length === 0 ? (
+       <View>
+         <Text style={{ textAlign: "center", color:"white", marginTop: 20  ,fontSize:16}}>
+        Added Todos will show here...
+        </Text>
+  
+       </View>
+        
+  
+) : (
+  todos.map((todo) => (
+    <TodoCard
+      key={todo.id}
+      task={todo.text}
+      onRemove={() =>
+        setTodos((prev) => prev.filter((t) => t.id !== todo.id))
+      }
+    />
+  ))
+)}
+
 
 
    <TouchableOpacity style={styles.createBox} onPress={() => setModalVisible(true)}>
